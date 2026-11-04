@@ -1,7 +1,5 @@
 # keyCD
 
-## Overview
-
 keyCD is a command-line tool for Bash that lets you jump to saved directories using short, memorable keys. Type `c <key>` instead of the full directory path.
 
 ```bash
@@ -16,7 +14,6 @@ keyCD also accepts ordinary directory paths, so `c /etc` and `c ../` work too.
 
 ## Table of contents
 
-- [Overview](#overview)
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -205,3 +202,4 @@ rm -r -- "$HOME/.config/keycd"
 ```
 
 Removing the source repository is optional and separate from uninstalling the working files.
+
