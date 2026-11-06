@@ -1,16 +1,15 @@
 # keyCD
 
-keyCD is a command-line tool for Bash that lets you jump to saved directories using short, memorable keys. Type `c <key>` instead of the full directory path.
+keyCD lets you jump to a directory in Bash without typing its full path. Run keyCD by typing `c` followed by a shortcut name, such as `c docs`. You can also use `c` like `cd` with an ordinary directory path.
 
-```bash
-cd ~/.config/mango
-c -a mango
-
-cd ~
-c mango
+```text
+$ cd ~/Documents
+$ c -a docs # Add the docs shortcut
+$ cd ~
+$ c docs
+$ pwd
+/home/alex/Documents
 ```
-
-keyCD also accepts ordinary directory paths, so `c /etc` and `c ../` work too.
 
 ## Table of contents
 
@@ -25,9 +24,9 @@ keyCD also accepts ordinary directory paths, so `c /etc` and `c ../` work too.
 ## Features
 
 - Add, remove and list named directory shortcuts.
-- Complete shortcut keys, options and directory paths with Tab.
+- Complete shortcut names, options and directory paths with Tab.
 - Highlight missing directories when listing shortcuts.
-- Store shortcuts in a plain-text database.
+- Shortcuts are stored in a plain-text database.
 - Keep your existing database when reinstalling or updating.
 
 ## Requirements
@@ -36,7 +35,7 @@ keyCD also accepts ordinary directory paths, so `c /etc` and `c ../` work too.
 - Standard Linux utilities from GNU Coreutils, plus `grep`. These are normally already installed.
 - Git, if you choose to clone and update the repository with Git.
 
-The current version supports Bash only. Zsh and other shells are not currently supported.
+The current version of keyCD only supports the Bash shell.
 
 ## Installation
 
@@ -56,7 +55,7 @@ Run them as your normal user, without `sudo`.
 
 The installer copies the main script and Bash completion file into `~/.local/share/keycd/`.
 
-The installer does not create or modify your personal database. It does not modify `~/.bashrc`.
+The installer does not modify `~/.bashrc`.
 
 ### 2. Configure Bash
 
@@ -85,20 +84,22 @@ c --help
 c -l
 ```
 
-The first time you run a `c` command, keyCD creates `~/.config/keycd/` and an empty `keycd_db.txt` database if needed. An existing database is preserved.
+The first time you run `c`, keyCD creates an empty database for your shortcuts if one doesn’t already exist. If you already have saved shortcuts, keyCD keeps them.
 
 On a new installation, `c -l` displays only the column headings until you add your own shortcuts.
+
+Once you’ve confirmed keyCD is working, you can delete the `keycd` folder that `git clone` created. The installer has already copied the files keyCD needs into `~/.local/share/keycd/`.
 
 ## Usage
 
 | Command | Action |
 | --- | --- |
-| `c <key>` | Jump to a saved directory |
+| `c <shortcut-name>` | Jump to a saved directory |
 | `c <path>` | Change to an ordinary directory path |
 | `c` | Return to your home directory |
-| `c -a <key>` | Save the current directory under a key |
-| `c -a` | Prompt for a key and save the current directory |
-| `c -r <key>` | Remove the shortcut with that key |
+| `c -a <shortcut-name>` | Save the current directory under a shortcut name |
+| `c -a` | Prompt for a shortcut name and save the current directory |
+| `c -r <shortcut-name>` | Remove the shortcut with that name |
 | `c -r` | Remove the shortcut for the current directory |
 | `c -l` | List shortcuts and flag missing directories |
 | `c -h` | Show help |
@@ -115,13 +116,17 @@ cd /tmp
 c docs
 ```
 
-Keys may contain letters, numbers, underscores and hyphens. Keys are case-sensitive. Each key and each directory path must be unique.
+In keyCD, a **key** is the name you give a shortcut, such as `docs` in `c docs`.
 
-Saved keys take priority over ordinary paths. To explicitly select a relative directory whose name matches a saved key, use `c ./directory-name`.
+Shortcut names may contain letters, numbers, underscores and hyphens. Shortcut names are case-sensitive. Each shortcut name and each directory path must be unique.
+
+For ordinary directory paths, you can use `c /etc` or `c ../`.
+
+Shortcut names take priority over ordinary paths. To explicitly select a relative directory whose name matches a shortcut name, use `c ./directory-name`.
 
 ### Tab completion
 
-**You don't need to type the full key.** Tab completion makes jumping to saved directories even quicker and soon becomes part of your everyday workflow.
+**You don't need to type the full shortcut name.** Tab completion makes jumping to saved directories even quicker and soon becomes part of your everyday workflow.
 
 For example, if you saved a directory as `mango`:
 
@@ -131,7 +136,7 @@ For example, if you saved a directory as `mango`:
 
 Once you get used to it, navigating becomes a quick routine: **`c`, a few letters, Tab, Enter.** You can give shortcuts meaningful, descriptive names without having to type them in full every time.
 
-If several keys or directories match, type a few more letters to narrow the suggestions, or press **Tab twice** to see the available matches with the usual Bash settings.
+If several shortcut names or directories match, type a few more letters to narrow the suggestions, or press **Tab twice** to see the available matches with the usual Bash settings.
 
 Tab completion also works with command options and ordinary directory paths, including names containing spaces. You can complete a directory, type the first few letters of a directory inside it, and press **Tab** again to continue navigating through the path.
 
@@ -157,7 +162,7 @@ Your personal database is created automatically on first use. No default databas
 
 ### Database format
 
-Each entry contains a key and an absolute directory path separated by `|`:
+Each entry contains a shortcut name and an absolute directory path separated by `|`:
 
 ```text
 docs|/home/alex/Documents
@@ -166,7 +171,7 @@ projects|/home/alex/src
 
 Blank lines and lines beginning with `#` are ignored when loading the database. Paths containing `|` or newline characters are not supported.
 
-Adding or removing shortcuts rewrites the database in sorted key order. Comments and blank lines are not retained during that rewrite.
+When you add or remove a shortcut, keyCD sorts the entries by shortcut name and rewrites the database. Comments and blank lines are not retained during that rewrite.
 
 Back up your personal database if you want to preserve or transfer your shortcuts.
 
